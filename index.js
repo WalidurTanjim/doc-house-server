@@ -28,7 +28,27 @@ async function run() {
     await client.connect();
 
     // collections
+    const usersCollection = client.db('DocHouse').collection('users');
     const doctorsCollection = client.db('DocHouse').collection('doctors');
+
+    // users related api
+    app.get('/users/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.get('/users', async(req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.post('/users', async(req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    })
 
     // doctors related api
     app.get('/doctors/:id', async(req, res) => {
@@ -42,6 +62,12 @@ async function run() {
         const result = await doctorsCollection.find().toArray();
         res.send(result);
     });
+
+    app.post('/doctors', async(req, res) => {
+      const doctor = req.body;
+      const result = await doctorsCollection.insertOne(doctor);
+      res.send(result);
+    })
 
     app.delete('/doctors/:id', async(req, res) => {
         const id = req.params.id;
