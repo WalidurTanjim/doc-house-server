@@ -50,6 +50,13 @@ async function run() {
       res.send(result);
     })
 
+    app.delete('/users/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result);
+    })
+
     // doctors related api
     app.get('/doctors/:id', async(req, res) => {
         const id = req.params.id;
